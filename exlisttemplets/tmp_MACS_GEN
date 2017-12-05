@@ -1,0 +1,36 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+-------------------------------
+$(
+
+--列表对像下mem信息
+var !mem coll all PIPE for ce
+do !m indices  !mem
+$!mem[$!m]
+q zone
+q name
+q temp
+enddo
+
+--导出当前对象为文本
+File  /c:\temp\ce01.txt
+Output CE
+File End
+syscom 'c:\temp\'
+
+--替换名字
+!name =  name
+!namefix = !name.replace('BGH50005','BGH50019')
+ name  $!namefix 
+
+
+)$
+---------------------------------------
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+

@@ -1,0 +1,248 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!arrayresult = array()
+!CENAME = NAME
+--alpha log /e:\out\log.txt  OVERWRITE
+do !N indices  !!arraylist
+  !listline = !!arraylist[!n].after('    ').trim()
+  !listdbref = !listline.dbref()
+-- 引用参考号请用 $!listdbref
+$!listdbref
+--以下为遍历执行内容--
+
+--name替换
+!name =  name
+if  (match(!name,'XXX')  gt  0) then
+!namefix  =  !name .replace('XXX','XXX')
+q !namefix
+endif
+
+--以上为遍历执行内容--
+
+enddo
+--alpha log end
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+Q NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+Q NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+Q NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+--------------------------------------------------

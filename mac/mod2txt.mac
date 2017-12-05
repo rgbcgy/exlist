@@ -1,0 +1,12 @@
+define function !!modtotxt(!form is form)
+!name = namn
+!type = type
+!namn  = !name.replace('/','-')
+!namn  = !namn.replace('=','-')
+!path = 'D:\AVEVA\OUT\' +  !type.string() +  '-' + !namn.string() + '.txt'
+file /$!path
+output  ce
+file end
+endfunction
+
+

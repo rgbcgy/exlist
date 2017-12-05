@@ -1,0 +1,27 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+
+
+      !branem = mem
+      if (!branem.size() ne 0) then
+      do !b indices  !branem
+      !mem = !branem[!b]
+      $!mem
+       q name
+      q spref
+
+
+
+
+
+
+
+
+enddo
+endif
+--以上为遍历执行内容--
+enddo
+$P  OK

@@ -1,0 +1,55 @@
+onerror CONTINUE
+!arrayresult = array()
+!CENAME = NAME
+--alpha log /e:\out\log.txt  OVERWRITE
+do !N indices  !!arraylist
+  !listline = !!arraylist[!n].after('    ').trim()
+  !listdbref = !listline.dbref()
+$!listdbref
+--以下为遍历执行内容------------------
+
+
+
+--------------------------------------
+-- !att  =  CATREF
+-- !old = 'BPPAH'
+-- !new = 'GRPBPP'
+-- If  (match(!att.name.string(),!old)  gt  0) then
+-- !attfix  =  !att.name.string().replace(!old,!new)
+-- CATREF  $!attfix
+-- q !attfix
+-- endif
+
+----name替换
+--!att  =  name
+--!old = '150R03H'
+--!new = 'A1P'
+--if  (match(!att,!old)  gt  0) then
+--!attfix  =  !att.replace(!old,!new)
+--name  $!attfix
+--q !attfix
+--endif
+
+
+
+
+--!att  =  rtext
+--if  (match(!att,'GB12459')  gt  0) then
+--!attfix  =  !att.replace('GB12459','GB/T12459')
+----ext  '$!attfix'
+--q !attfix
+--endif
+
+
+
+--替换para
+--!para =  para
+--!para[3] = 
+--para $!para[1]   $!para[2]  $!para[3]  $!para[4]  $!para[5]  $!para[6]
+
+--以上为遍历执行内容--
+
+enddo
+--alpha log end
+$P  OK
+$!CENAME

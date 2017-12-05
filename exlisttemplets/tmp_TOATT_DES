@@ -1,0 +1,37 @@
+!arraybrannames = array()
+!arraybranadd = array()
+!arrayfileline = array()
+!filepath = object FILE('c:\toatt.csv') 
+!filelines = !filepath.readfile() 
+
+var !allpipes collect all bran for ce 
+do !i from 1  to arraysize(!allpipes)
+ !temp =  !allpipes[!i]
+ $!temp
+ !name = name
+ !arraybrannames.append(!name)
+enddo
+
+
+do !i from 1 to arraysize(!arraybrannames)
+!tempbranname =  !arraybrannames[!i]
+  do !n from 1 to arraysize(!filelines)
+  !tempfilelines = !filelines[!n].Split(',')
+  
+  !tempPIPENUM = !tempfilelines[1]
+  !tempPIPETEMP = !tempfilelines[2]
+  
+    if  (match(!tempbranname,!tempPIPENUM)  gt  0) then
+    $!tempbranname
+    temp $!tempPIPETEM
+--!arraybranadd.append(!tempbranname)
+--!arrayfileline.append(!tempPIPENUM)
+    endif
+  enddo
+enddo
+
+--!output = object FILE('c:\BRANADD.txt')
+--!output.writefile('overwrite',!arraybranadd)  
+
+--!output = object FILE('c:\PIPENUMADD.txt')
+--!output.writefile('overwrite',!arrayfileline)  

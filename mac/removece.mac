@@ -1,0 +1,12 @@
+DO
+prompt off
+prompt load escape 'Identify 请点取需要REVOME的部件！'
+ID @
+handle (61,528)
+prompt on
+return
+endhandle
+prompt on
+
+remove ce
+ENDDO

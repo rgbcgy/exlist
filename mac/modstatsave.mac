@@ -1,0 +1,22 @@
+alpha log /%PMLLIB%/HPDI/tempfiles/modstatsave  OVERWRITE
+q draw
+alpha log END
+
+
+!arrayoriginal = array()
+!arrayfix = array()
+!fileopen = object FILE('%PMLLIB%/HPDI/tempfiles/modstatsave')
+   
+!arrayoriginal = !fileopen.readfile()
+!arrayoriginal[1].delete() 
+!arrayfix.append('remove all')                                                              
+   DO !n   indices     !arrayoriginal              
+   !filelines = !arrayoriginal[!n]
+   !filelinesfix = 'add  ' + !filelines 
+   !arrayfix.append(!filelinesfix)                    
+   ENDDO  
+!Output = object FILE('%PMLLIB%/HPDI/tempfiles/modstatsavefix')
+!Output.WriteFile('OVERWRITE', !arrayfix)  $* 
+--q var !arrayfix
+!sum = !arrayoriginal.size() 
+$P drawlist保存成功! 共 $!sum 项元素。

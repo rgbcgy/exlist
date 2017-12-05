@@ -1,0 +1,54 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+-------------------------------
+$(
+
+搜索替换字符串
+!A =  RTEXT
+if  (match(!A,'ELBOW')  gt  0) then
+if  (match(!A,'LR')  gt  0) then
+else
+!rte  =  RTEXT
+!rtefix  =  !rte .replace('ELBOW','ELBOW LR') 
+--rtext  '$!rtefix'
+q var '!rtefix'
+endif
+endif
+
+--查询spco的blrf
+q  name
+!CATR = CATREF
+$!CATR
+Q BLRF
+
+--查询法兰的螺栓信息
+q  name
+!bltref = bltref
+$!bltref
+q nstd
+Q xtra
+q bitl
+
+-- 查询某项属性中是否含有某个值
+!A =  RTEXT
+ if  (match(!A,' A')  gt  0) then
+q name
+q RTEXT
+endif
+
+--查询spco的param
+!catref = catref
+$!catref
+q param 
+
+
+)$
+---------------------------------------
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+

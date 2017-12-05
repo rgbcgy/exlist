@@ -1,0 +1,26 @@
+--检查bran首尾是否连接
+--检查方式为查询首尾坐标是不是在原点附近
+--需要将要检查的site或者zone加入列表
+!CENAME = NAME
+do !N indices  !!arraylist
+  !listdbref = !!arraylist[!n].after('    ').trim().dbref()
+  $!listdbref
+  var !bran coll all bran for ce
+  do !M indices  !bran
+    $!bran[$!M]
+    !hpos = hpos
+    !tpos = tpos
+    !hposeast = !hpos.east
+    !tposeast = !tpos.east
+    --q var !hposeast
+    if (!hposeast LT 100000 or  !tposeast LT 100000) then
+    q name
+    $P 未收尾
+    endif
+  enddo
+enddo
+$P  OK
+$!CENAME
+
+
+

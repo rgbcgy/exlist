@@ -1,0 +1,27 @@
+--onerror CONTINUE
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+
+
+!SPCO1 = SPCO
+!SPCO= !SPCO1.name.STRING().replace('VJC50003','M6ZCVJ1')
+!CATREF1 = CATREF
+!CATREF = !CATREF1.name.STRING().replace('BVJAVC5','BVJDE')
+!DETREF1 = DETREF
+!DETREF = !DETREF1.name.STRING().replace('FL-150','FL-16')
+
+NEW SPCOMPONENT $!SPCO
+TANS 'VJ1'
+CATR SCOMPONENT $!CATREF
+DETR SDTEXT   /M6ZC-VJ1-15-50
+
+END
+
+
+---------以上为遍历执行内容-----------------------------------------
+enddo
+$P  OK
+$!CENAME

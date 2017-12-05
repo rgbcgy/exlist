@@ -1,0 +1,22 @@
+!filepath = object FILE('D:\AVEVA\TEMP\fromlist.csv')
+!filelines = !filepath.readfile()
+
+INPUT BEGIN
+
+do !n from 1 to arraysize(!filelines)
+  !lines = !filelines[!n].Split(',')
+  !name = '/'&!lines[1]
+  !para = !lines[2]
+
+  NEW SCOMPONENT $!name
+  GTYP TEE
+  para $!para
+  END
+  OLD SCOMPONENT $!name
+  PTRE PTSET /PPHTEEBWGB-P3-4
+  GMRE GMSET /PPHTEEBWGB-G7-6
+  DTRE DTSET /PPHTEEBWGB-DTSE
+  INPUT END  SCOMPONENT $!name
+
+enddo
+INPUT FINISH

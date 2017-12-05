@@ -1,0 +1,4 @@
+File  /c:\temp\outputce.txt
+Output CE
+File End
+syscom 'c:\temp\outputce.txt'

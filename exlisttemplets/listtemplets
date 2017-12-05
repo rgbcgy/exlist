@@ -1,0 +1,23 @@
+tmp_exlistdef      --默认模板
+tmp_replace        --属性替换
+tmp_fromlist       --从列表生成scom等
+---------建库-----------------
+tmp_CATA_NEWSCOM    --读文件新建SCOM
+tmp_CATA_NEW-SPCO   --在spco层次下新建spco
+tmp_CATA_SPCO-CE    --生成SPCO信息
+tmp_CATA_SDTE-ALL    --生成sdte信息
+tmp_CATA_PARA       --建库代码片段
+---------材料-----------------
+tmp_MTO_list     --生成mto列表
+tmp_checkHT      --检查头尾是否正常收尾
+tmp_checkMEM     --检查pipe,bran是否无mem
+tmp_MTO_BRAN     --生成BRAN及TEE信息表
+tmp_MTO_COMP-AONETYPE     --生成某类管件信息
+tmp_MTO_COMP-ALL --生成全部COMP信息
+---------建模-----------------
+tmp_TOATT_DES      --灌属性
+tmp_allmem         --遍历所有comp
+tmp_MACS_DES       --建模代码片段
+---------通用-----------------
+tmp_MACS_GEN       --通用代码片段
+tmp_macsave.mac    --查看保存的代码

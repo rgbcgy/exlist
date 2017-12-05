@@ -1,0 +1,38 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+-------------------------------
+$(
+--列表对像下所有管件, 需要左侧列表type为bran
+
+ !branem = mem
+ if (!branem.size() ne 0) then
+ do !b indices  !branem
+ !mem = !branem[!b]
+ $!mem
+ q name
+ q spref
+
+--列表对像下pipe信息
+var !mem coll all PIPE for ce
+do !m indices  !mem
+$!mem[$!m]
+q zone
+q name
+q temp
+enddo
+
+--替换名字
+!name =  name
+!namefix = !name.replace('BGH50005','BGH50019')
+ name  $!namefix 
+
+)$
+---------------------------------------
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME
+

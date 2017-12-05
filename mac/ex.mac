@@ -1,0 +1,116 @@
+pml reload form !!pipemto
+show !!pipemto
+
+
+
+
+
+
+$(
+-- 统计所有直管段长度,可用，重要
+!FMT = OBJECT FORMAT()
+!FMT.DP = 2
+
+VAR !TUBE COLL ALL TUBI  FOR CE
+VAR !LENGTHS EVAL ITLENG FOR ALL FROM !TUBE
+VAR !SPEC EVAL NAME OF SPREF FOR ALL FROM  !TUBE
+
+VAR !SORTEDINDEX SORT !SPEC CIASCII LASTINGROUP !SPECTYPE
+VAR !RESULT SUBTOTAL !LENGTHS !SORTEDINDEX  !SPECTYPE
+
+DO !I INDEX !SPECTYPE
+!RECORD = !SPEC[$!SORTEDINDEX[$!I]] + ' ' + !RESULT[$!I].REAL().STRING(!FMT)
+$P $!RECORD
+ENDDO
+
+$)
+
+
+$(
+--查询所有型钢，并汇总通规格的长度
+
+VAR !SECTIONS COLL ALL  SCTN FOR CE
+VAR !SPREF EVAL NAME OF SPREF FOR ALL FROM !SECTIONS
+VAR !LENGTHS EVAL TCTL FOR ALL FROM !SECTIONS
+
+VAR !INDEX SORT !SPREF CIASCI LASTINGROUP !GROUP
+VAR !TOTAL SUBTOTAL !LENGTHS !INDEX !GROUP
+
+DO  !I INDEX !GROUP
+!RECORD = !SPREF[$!INDEX[$!I]] + ' ' + !TOTAL[$!I]]
+$P $!RECORD
+ENDDO 
+
+
+
+-------------------------------
+var !sections coll all sctn With(name of spref eq '/BS-SPEF/102x5rsc')
+VAR !LENGTHS EVAL TCTL FOR ALL FROM  !SECTIONS
+!RESULLTT = 0
+DO !I VALUE !LENGTHS
+!RESULT  = !RESULT + !I.REAL()
+ENDDO
+
+$)
+
+
+
+
+
+$(
+!specarray = array()
+/PIPES
+
+var  !brans  coll all bran  for ce
+do !i values   !brans
+$!i
+var !name name
+var !pspec pspec
+if (!pspec eq '/A1A') then
+q $!pspec
+ !specarray.append(!name)
+endif
+enddo
+q var !specarray
+
+
+
+  !con = !this.con.val
+  !this.con.val = !con
+  if(!con eq '') then
+     !con = '*'
+  else
+     !con = '*' + '$!con' + '*'
+  endif  
+
+
+
+
+$)
+
+
+$(
+!a = 0
+do !i   from 10 to 20 by 1
+
+!a = !!rgbsum(!a,!i )
+
+enddo
+
+q $!a
+
+
+
+new equip /spongle
+
+new box
+xlen 1000 ylen 1000 zlen 1000
+new cyl dia 400 hei 600
+conn p1 to p3 of prev
+new snout dtop 600 dbot 400 hei 300
+conn p2 to p2 of prev
+new dish dia 600 heigh 300
+conn p2 to p1 of prev
+add /spongle auto /spongle
+
+$)

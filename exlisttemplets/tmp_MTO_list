@@ -1,0 +1,12 @@
+!arrayresult = array()
+
+do !N indices  !!arraylist
+  !listline = !!arraylist[!n].after('    ').trim()
+  q var  !listline
+ !arrayresult.append(!listline)
+enddo
+ !filename = 'D:\AVEVA\selected.txt'
+ !output = object file('$!filename')
+ !output.writefile('overwrite',!arrayresult)  
+
+$P  OK

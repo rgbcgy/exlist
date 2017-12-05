@@ -1,0 +1,54 @@
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+!sitemem = mem
+if (!sitemem.size() ne 0) then
+do !s indices  !sitemem
+!mem = !sitemem[!s]
+$!mem
+$p zone
+q name
+
+  !zonemem = mem
+  if (!zonemem.size() ne 0) then
+  do !z indices  !zonemem
+  !mem = !zonemem[!z]
+  $!mem
+  $p pipe
+  q name
+  
+    !pipemem = mem
+    if (!pipemem.size() ne 0) then
+    do !p indices  !pipemem
+    !mem = !pipemem[!p]
+    $!mem
+    $p bran
+    q name
+    
+      !branem = mem
+      if (!branem.size() ne 0) then
+      do !b indices  !branem
+      !mem = !branem[!b]
+      $!mem
+      $p comp
+      q ref
+      
+      
+      
+      
+      
+      
+      
+      enddo
+      endif
+    enddo
+    endif
+  enddo
+  endif
+enddo
+endif
+--以上为遍历执行内容--
+enddo
+$P  OK

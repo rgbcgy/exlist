@@ -1,0 +1,105 @@
+----生成bran列表，带补强焊接支管信息
+--------------
+!CENAME = NAME
+!allbran = array()
+!alltee = array()
+!teeinfo = array()
+!braninfo = array()
+!braninfoC = array()
+!braninfoC.append('SITE,ZONE,PIPE,BRAN,TEMP,ISPEC,INTH,HREF,TREF')
+
+do !N indices  !!arraylist
+  !listline = !!arraylist[!n].after('    ').trim()
+  !listdbref = !listline.dbref()
+  $!listdbref
+Var !tmpbran Collect all  Branch  For CE
+var !tmptee coll all tee for  ce
+!allbran.appendarray(!tmpbran)
+!alltee.appendarray(!tmptee)
+enddo
+
+-----------焊接支管信息---------------
+do !M values  !alltee
+$!M
+!name = name
+!pipe = pipe
+!BRAN = BRAN
+!dexr = dtxr
+!spref = spref
+
+!para = para
+!bore1 = !para[1]
+!bore2 = !para[2]
+if  (match(!dexr,'带补强焊接支管')  gt  0) then
+!line = !name + ',' + !bore1.string()  + ',' +  !bore2.string()  + ',' + !pipe.name  + ',' + !BRAN.name  + ',' + !spref.name
+!teeinfo.APPEND(!line)
+else
+endif
+enddo
+
+--------bran信息----------------
+do !b values !allbran
+$!b
+!name = name
+!temp = temp
+!pipe = pipe
+!zone = zone
+!site = site
+
+!INTHickness = INTHickness
+!ispectmp = ispec
+--if (!ispectmp.string()  eq  'Unset' ) then
+if  (match(!ispectmp.string(),'Un')  gt  0) then
+!ispec =  ''
+elseif (match(!ispectmp.string(),'Nu')  gt  0) then
+!ispec =  ''
+else
+!ispec = !ispectmp.name
+endif
+
+!tspectmp = tspec
+if  (match(!tspectmp.string(),'Un')  gt  0) then
+!tspec =  ''
+elseif (match(!tspectmp.string(),'Nu')  gt  0) then
+!tspec =  ''
+else
+!tspec = !tspectmp.name
+endif
+--q var !ispec
+
+!hreftmp = href
+!href = !hreftmp.string()
+!treftmp = tref
+!tref = !treftmp.string()
+
+--!treftmp = tref
+--if  (match(!treftmp.string(),'Un')  gt  0) then
+--!tref =  ''
+--elseif (match(!treftmp.string(),'Nu')  gt  0) then
+--!tref =  ''
+--else
+--!tref = !treftmp.string()
+--endif
+
+
+!lilne = !site.name + ',' + !zone.name + ',' + !pipe.name + ',' + !name  + ',' + !temp.string()  + ',' + !ispec  + ',' + !tspec  + ',' + !INTHickness.string() + ',' + !href  + ',' + !tref
+!braninfo.append(!lilne)
+!braninfoC.append(!lilne)
+enddo
+--enddo
+
+----写文件
+!output1 = object file('D:\AVEVA\mto\BRAN.TXT')
+!output1.writefile('overwrite',!braninfo)
+
+
+!output3 = object FILE('D:\AVEVA\mto\TEE-R.TXT')
+!output3.writefile('overwrite',!teeinfo)
+
+!output1 = object file('C:\BRAN.CSV')
+!output1.writefile('overwrite',!braninfoC)
+
+$!CENAME
+
+--SYSCOM  'C:\BRAN.CSV  &'
+--SYSCOM 'D:\AVEVA\mto\TEE-R.CSV &'

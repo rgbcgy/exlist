@@ -1,0 +1,22 @@
+----在spco层次下新建同口径不同类型的spco
+!name =  name
+!bore = !name.split(':')[2]
+!SPCO = '/A1R/A1RPLSE:' + !bore
+!SCOM = '/A1PRTSE150' + !bore
+!SDTE = '/A1PRT-F-15-600'
+
+INPUT BEGIN
+NEW SPCOMPONENT $!SPCO
+TANS 'F'
+
+END
+OLD SPCOMPONENT $!SPCO
+CATR SCOMPONENT $!SCOM 
+DETR SDTEXT  $!SDTE
+
+
+INPUT END  SPCOMPONENT $!SPCO
+INPUT FINISH
+
+
+

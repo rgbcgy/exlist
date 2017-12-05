@@ -1,0 +1,18 @@
+!CENAME = NAME
+!arraytmp = array()
+!array1 = array()
+!array2 = array()
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+var !arraytemp  coll all SPCO for ce
+do !M values 
+q  name
+
+
+
+
+--以上为遍历执行内容--
+enddo
+$P  OK
+$!CENAME

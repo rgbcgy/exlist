@@ -1,0 +1,35 @@
+--检查pipe,bran是否无mem
+--需要将要检查的site或者zone加入列表
+!CENAME = NAME
+do !N indices  !!arraylist
+  !listdbref = !!arraylist[!n].after('    ').trim().dbref()
+  $!listdbref
+ 
+ var !pipe coll all pipe for ce
+ do !P indices  !pipe
+    $!pipe[$!P]
+    !pipemem = mem
+    !pipesize = !pipemem.size()
+    if (!pipesize eq 0) then
+    q name
+    $P 该pipe下无bran
+    endif
+ enddo
+  
+ var !bran coll all bran for ce
+ do !B indices  !bran
+    $!bran[$!B]
+    !branmem = mem
+    !bransize = !branmem.size()
+    if (!bransize eq 0) then
+    q name
+    $P 该bran下无管件
+    endif
+ enddo 
+  
+enddo
+$P  OK
+$!CENAME
+
+
+

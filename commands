@@ -1,0 +1,10 @@
+---commands---
+----通用命令----
+alpha log /c:\temp\alphalog.txt OVERWRITE
+alpha log END
+q att
+----paragon模块----
+
+----design模块----
+
+

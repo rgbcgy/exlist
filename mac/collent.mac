@@ -1,0 +1,178 @@
+!arraycomp  = array()
+!arraycomptubi  = array()
+!error = array()
+var !comp  coll  ALL BRANCH MEMBERS
+do !n indices !comp
+!compdbref = !comp[!n].dbref()
+!compdbreftype = !compdbref.type
+!compdbrefspref = !compdbref.spref.name
+Handle (2,754) 
+!errorcomp =!compdbref.name
+!error.append(!errorcomp)
+$p $!errorcomp
+EndHandle
+Handle (2,202) 
+!errorcomp =!compdbref.name
+!error.append(!errorcomp)
+$p $!errorcomp
+EndHandle
+if (!compdbreftype  eq 'TUBI' ) then
+   !complinetubi =!compdbref.type + ',' + !compdbref.spref.name + ',' + !compdbref.dtxr + ',' + str(!compdbref.itle) + ',' + !compdbref.own.own.pspec.name  
+Handle (2,754) 
+!errorcomp =!compdbref.name
+$p $!errorcomp
+Handle (2,202) 
+!errorcomp =!compdbref.name
+!error.append(!errorcomp)
+$p $!errorcomp
+EndHandle
+EndHandle
+   !arraycomptubi.append(!complinetubi)
+else 
+   !compline = !compdbref.owner.name + ',' + !compdbref.type +  ',' + !compdbref.spref.name + ',' + !compdbref.dtxr + ',' + !compdbref.own.own.pspec.name + ',' + !compdbref.own.pspec.name
+   handle any
+   endhandle 
+   !arraycomp.append(!compline)
+endif
+enddo
+
+q var  !error
+
+
+
+
+
+
+
+
+--------------------------ok
+
+-----------sdte部分
+!arraysdte = array()
+ce  /DLL-CATA
+var !sdte  coll  all sdte for ce
+do !n indices !sdte
+--q var !n
+!name = !sdte[!n].dbref().name
+!skey = !sdte[!n].dbref().skey
+!rtext = !sdte[!n].dbref().rtext
+!sdteline = !Name + ',' + !skey + ',' + !rtext
+!arraysdte.append(!sdteline)
+enddo
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\sdte.txt')
+!Output.WriteFile('OVERWRITE', !arraysdte.sort())  $* 
+
+-----------site部分
+!arraysite = array()
+var !site  coll  all site    
+do !n indices !site
+!sitedbref = !site[!n].dbref()
+!siteline = !sitedbref.owner.name +  ',' + !sitedbref.name + ',' + !sitedbref.type
+!arraysite.append(!siteline)
+enddo
+--q var !arraysite
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\site.txt')
+!Output.WriteFile('OVERWRITE', !arraysite.sort())  $* 
+
+-----------zone部分
+!arrayzone = array()
+var !zone  coll  all zone   
+do !n indices !zone
+!zonedbref = !zone[!n].dbref()
+!zoneline = !zonedbref.owner.name +  ',' + !zonedbref.name + ',' + !zonedbref.type
+!arrayzone.append(!zoneline)
+enddo
+--q var !arrayzone
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\zone.txt')
+!Output.WriteFile('OVERWRITE', !arrayzone.sort())  $* 
+
+-----------pipe部分
+!arraypipe = array()
+var !pipe  coll  all pipe   
+do !n indices !pipe
+!pipedbref = !pipe[!n].dbref()
+!pipeline = !pipedbref.owner.name +  ',' + !pipedbref.name + ',' + !pipedbref.type
+!arraypipe.append(!pipeline)
+enddo
+--q var !arraypipe
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\pipe.txt')
+!Output.WriteFile('OVERWRITE', !arraypipe.sort())  $* 
+
+-----------bran部分
+!arraybran  = array()
+var !bran  coll  all bran  
+do !n indices !bran
+!brandbref = !bran[!n].dbref()
+!branline = !brandbref.owner.name +  ',' + !brandbref.name + ',' + !brandbref.type
+!arraybran.append(!branline)
+enddo
+--q var !arraybran
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\bran.txt')
+!Output.WriteFile('OVERWRITE', !arraybran.sort())  $* 
+
+
+-----------comp部分
+!arraycomp  = array()
+var !comp  coll  ALL BRANCH MEMBERS
+do !n indices !comp
+!compdbref = !comp[!n].dbref()
+   !compline = !compdbref.owner.name + ',' + !compdbref.type +  ',' + !compdbref.name + ',' + !compdbref.dtxr
+      handle any
+   endhandle 
+   !arraycomp.append(!compline)
+enddo
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\comp.txt')
+!Output.WriteFile('OVERWRITE', !arraycomp.sort())  $* 
+
+
+
+
+-------------comp部分 4 del
+$(
+----可选择性的管件属性抽取
+!arraycomp  = array()
+!arraycomptubi  = array()
+--查询当前节点下的所有元件
+var !comp  coll  ALL BRANCH MEMBERS 
+do !n indices !comp
+!compdbref = !comp[!n].dbref()
+!compdbreftype = !compdbref.type
+if (!compdbreftype  eq 'TUBI') then
+   !complinetubi = !compdbref.owner.name + ',' + !compdbref.type +  ',' + !compdbref.name + ',' + !compdbref.dtxr
+      handle any
+   endhandle 
+   !arraycomptubi.append(!complinetubi)
+else 
+   !compline = !compdbref.owner.name + ',' + !compdbref.type +  ',' + !compdbref.name + ',' + !compdbref.dtxr
+   handle any
+   endhandle 
+   !arraycomp.append(!compline)
+endif
+enddo
+--定义结果文件保存位置
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\comp.txt')
+!Output.WriteFile('OVERWRITE', !arraycomp.sort())  $* 
+!Output = object FILE('%PMLLIB%\HPDI\outputfiles\comptubi.txt')
+!Output.WriteFile('OVERWRITE', !arraycomptubi.sort())  $* 
+
+
+-----------comp部分
+!arraycomp  = array()
+--查询当前节点下的所有元件
+var !comp  coll  ALL BRANCH MEMBERS for ce
+do !n indices !comp
+!compdbref = !comp[!n].dbref()
+--定义需要的字段：
+--默认定义有         bran名                   元件类型                 元件名                  rtext
+!compline = !compdbref.owner.name + ',' + !compdbref.type +  ',' + !compdbref.name + ',' + !compdbref.dtxr
+handle any
+endhandle 
+!arraycomp.append(!compline)
+enddo
+q var !arraycomp
+--定义结果文件保存位置
+!Output = object FILE('f:\AVEVA\comp.txt')
+!Output.WriteFile('OVERWRITE', !arraycomp.sort())  $* 
+--
+--------------------------------
+$)

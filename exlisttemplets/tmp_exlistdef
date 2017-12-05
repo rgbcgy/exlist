@@ -1,0 +1,41 @@
+--onerror CONTINUE
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--以下为遍历执行内容--
+q  name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------分别导出文件
+--!name = name
+--!path = '/D:\AVEVA\TEMP\SPEC-' + !name.replace('/','') + '.txt'
+--File  $!path
+--Output CE
+--File End
+
+-------遍历选择对像的所有管件
+--var  !comp coll all bran member  for ce
+--do !n  values  !comp 
+--$!n
+--q name
+--enddo
+
+---------以上为遍历执行内容-----------------------------------------
+enddo
+$P  OK
+$!CENAME

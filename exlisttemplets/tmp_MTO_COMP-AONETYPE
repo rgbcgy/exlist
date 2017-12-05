@@ -1,0 +1,39 @@
+----------------------------------------
+!COMPINFO = ARRAY()
+!CENAME = NAME
+do !N indices  !!arraylist
+!listdbref = !!arraylist[!n].after('    ').trim().dbref()
+$!listdbref
+--!list = !!arraylist[!n].after('    ').trim()
+--以下为遍历执行内容--
+
+!dexr = DTXR
+!SPREF = SPREF
+!TEMP = TEMP OF OWNER
+!BRAN = BRAN
+
+if  (match(!dexr,'快速接头')  gt  0) then
+!line = !BRAN.NAME.string() + ',' + !spref.name.string()  + ',' +  !dexr.string()  + ',' + !TEMP.string()
+!COMPINFO.APPEND(!line)
+else
+endif
+
+
+--遍历选择对像的所有管件
+--var  !comp coll all bran member  for ce
+--do !n  values  !comp
+--$!n
+--q name
+--enddo
+--以上为遍历执行内容--
+enddo
+$!CENAME
+
+
+
+!output1 = object file('D:\AVEVA\mto\COMPINFO.CSV')
+!output1.writefile('overwrite',!COMPINFO)
+
+$!CENAME
+
+SYSCOM 'D:\AVEVA\mto\COMPINFO.CSV &'

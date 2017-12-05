@@ -1,0 +1,21 @@
+----需要先编辑好文件 LISTFILE.csv
+!output = object file('D:\AVEVA\TEMP\LISTFILE.csv')
+!lists = !output.readfile()  
+
+do !i FROM 2 TO ARRAYSIZE(!lists)
+!SCOMS = !lists[$!i].Split(',')
+!scomtype = 'REDU'
+!scomname = !SCOMS[1]
+!scompara = !SCOMS[2]
+!scomptref = '/PPHRESWGB-PTSET'
+!scomgmref = '/PPHRESWGB-GMSET'
+NEW SCOMPONENT $!scomname
+GTYP $!scomtype
+PARA $!scompara
+PTRE PTSET $!scomptref
+GMRE GMSET $!scomgmref
+
+
+enddo
+
+

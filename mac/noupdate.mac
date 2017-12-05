@@ -1,0 +1,5 @@
+!check = !!alert.confirm('是否恢复到上次savework时的状态？')
+if(!check eq 'YES')then
+mdb noupdate
+exit
+endif

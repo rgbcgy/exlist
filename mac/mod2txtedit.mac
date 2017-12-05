@@ -1,0 +1,17 @@
+--syscom delete F:\AVEVA\Pdms11.5.SP1\pmllib\HEC\outputfiles\mod2txtedit.txt
+
+alpha log /%PMLLIB%/HPDI/tempfiles/modtxtfile OVERWRITE
+output  ce
+alpha log END
+
+$(
+!name = name
+file /%PMLLIB%/HEC/inputfiles$!name
+output  ce
+file end
+
+!name = name
+file /%PMLLIB%/HEC/inputfiles/mod2txtedit
+output  ce
+file end
+$)

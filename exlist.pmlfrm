@@ -1,0 +1,478 @@
+$(
+------------------------------------------------------------------------
+名称: exlist
+版本: 1.0
+作者: RGB (chgy@sina.com)
+感谢: MICHAEL WANG,Shi Hong,......
+最后修改日期:  2017/11/27
+声明: 任何个人可以使用，修改和重新发布此程序，但请务必遵守GPL协议。
+      使用本软件产品风险由用户自行承担，作者不承担任何责任。
+------------------------------------------------------------------------
+$)
+setup form !!Exlist
+  init |!this.init()|
+  title 'list扩展工具'
+--frame .frame1 ' ' at x0 y0  width 5
+--toggle .ce tagwid 5 'From CE' at   ymax.frame1 -0.8
+toggle .ce tagwid 5 'From CE'  
+path right
+toggle .appendmode tagwid 8 '追加模式'  tooltip '追加模式' 
+--toggle .factmode tagwid 4 '递归'  tooltip '递归模式' 
+text .filter tagwid 8 '元素名称'  width 8 is string
+path down 
+text .TYPE1   tagwid 5 'TYPE1'  at xmin.ce width 5 is string
+path right
+text .TYPE2   tagwid 5 'TYPE2'  width 5 is string
+text .layer   tagwid 5 'LAYER'  width 5 is string   tooltip '在当前列表基础上递归生成新列表' 
+--path down
+--text .param  tagwid 15 '附加参数'  at xmin.ce  width 15 is string   
+list .list at xmin.ce  ymax.ce + 1  MULTIPLE  width 35 height 12
+path down
+button .go  '生成list'  at xmin.ce   ymax.ce + 10 width 6 tooltip '先填写type及元素名称的关键字，点击该按钮即可将点搜索到的内容依次添加到列表' at x0 ymax + 0.3
+path right
+button .addce  '加CE'   tooltip '将当前对象加入列表' 
+path right
+button .delce  '删除' tooltip '删除列表内点中的条目'
+button .removeall '清空'  tooltip '清空列表'
+button .savelist '保存list' width 6 tooltip '保存当前列表，便于下次使用'
+button .loadlist '加载list' width 6 tooltip '加载上次保存的列表' 
+path down
+option .togoop  at   xmin.ce   ymax + 0.3  tagwid 0 '' width 8   tooltip '查看列表中spco，scom等单选对象的对应选项属性' 
+path right
+button .sort    '排序'  tooltip '将列表中选中的对像从新排序'
+path right
+button .toce  'toce'  tooltip '将列表中选中的对像作为CE' 
+
+button .edittolist '导入list<-' tooltip '将PML编辑框内的元素导入到列表' 
+--exit
+
+--frame .frame2 '' at xmax.ce + 30 ymin.ce
+option .item '请选择模板      '  at xmin.ce + 40   ymin.ce   width 20
+path down
+option .commands'选择常用命令   '  at xmin.TYPE1 + 50   ymin.TYPE1   width 12
+path down
+textpane .batch 'PML编辑框:' at xmin.ce + 40   ymin.ce + 1.5   width 38 height 16
+button .apply '执 行' at xmin ymax + 0.25
+path right
+button .editas '编辑macro'    tooltip '打开编辑器编辑macro' width  7
+button .runmacro '运行macro'  tooltip '运行上次所保存的编辑窗口中的内容' width  7
+
+path down  
+button .qatt 'Q ATT' at xmin.apply
+path right
+button .end 'END' 
+button .loadce '导出ce' tooltip '将当前对象macro加载到编辑窗口'  width  7
+button .exit '退出'  width  5  OK
+
+--exit
+exit
+
+define method .Init()  
+  !!itemArrayA = array()
+  !!itemArrayB = array()
+  !!itemArrayC = array()
+  !!line = array()
+  !flines = ARRAY() 
+  !index = object FILE('%PMLLIB%/HPDI/EXLIST/exlisttemplets/listtemplets')            
+  !flines = !index.readfile()                
+  DO !A from 1 to arraysize(!flines)  
+    !!itemArrayA[$!A] = !flines[$!A]  
+    !!itemArrayB[$!A] = !flines[$!A].before('--').trim() 
+    !!itemArrayC[$!A] = !flines[$!A].after('--').trim() 
+    ENDDO                       
+  !This.item.Dtext = !!itemArrayC
+  !This.item.Rtext = !!itemArrayB                    
+  !this.item.callback = '!this.select()' 
+  !this.ce.val = TRUE 
+
+  -------commands
+  !commands = array()
+  !indexcommands = object FILE('%PMLLIB%/HPDI/EXLIST/commands')   
+  !commands = !indexcommands.readfile()    
+   !This.commands.Dtext = !commands
+   !This.commands.Rtext = !commands
+   !this.commands.callback = '!this.commands()'  
+  
+  -----togoop
+  !togoop = array()
+  !indextogoop = object FILE('%PMLLIB%/HPDI/EXLIST/togolist')   
+  !togoop = !indextogoop.readfile()    
+   !This.togoop.Dtext = !togoop
+   !This.togoop.Rtext = !togoop
+   !this.togoop.callback = '!this.togoop()'  
+
+  !!arraylistfilterinit = array()
+  !!arraylistfilter = array()
+  !!arraylistaddce = array()
+  !!arraylist = array()
+  !!arraylistfromfight = array()
+  !batchvalArray = array()
+  !this.go.callback = '!this.go()' 
+  !this.addce.callback = '!this.addce()'
+  !this.delce.callback = '!this.delce()'
+  !this.removeall.callback = '!this.removeall()' 
+--  !this.save.callback = '!this.save()'
+--  !this.load.callback = '!this.load()'
+  !this.apply.callback = '!this.apply()' 
+  !this.toce.callback = '!this.toce()'
+  !this.sort.callback = '!this.sort()'
+  --!this.openas.callback = '!this.openas()'
+  !this.editas.callback = '!this.editas()'
+  !this.runmacro.callback = '!this.runmacro()'
+  !this.savelist.callback = '!this.savelist()'
+  !this.loadlist.callback = '!this.loadlist()'  
+  !this.edittolist.callback = '!this.edittolist()'  
+  !this.loadce.callback = '!this.loadce()'  
+  !this.qatt.callback = 'q att' 
+  !this.end.callback = 'end'
+--加载默认模板 
+!index = object FILE('%PMLLIB%/HPDI/EXLIST/exlisttemplets/tmp_exlistdef')                             
+  !file = ARRAY()                                        
+  !file = !index.readfile()                                                                        
+  DO !A from 1 to arraysize(!file)                       
+    !batchvalArray[$!A] = !file[$!A]                       
+  enddo  
+ !This.batch.val = !batchvalArray   
+endmethod
+
+-- 添加当前元素到列表
+define method .addce()
+!Name = Name
+!Type = Type
+!!arraylistaddce.append(!Type + '    ' + !Name)
+!!arraylist.appendarray(!!arraylistaddce)
+!!arraylist.Unique()
+!this.list.dtext = !!arraylist
+!sum = !!arraylist.size()  
+ $p 列表内目前共有： $!sum  个元素
+endmethod
+
+-- 添加点选模型到列表
+define method .addmodel()
+DO
+prompt off
+prompt load escape 'Identify 请点取所需的模型'
+ID @
+handle (61,528)
+prompt on
+return
+endhandle
+prompt on
+
+--remove ce !Name = Name !Type = Type !!arraylistaddce.append(!Type + '    ' + 
+!Name) !!arraylist.appendarray(!!arraylistaddce) !!arraylist.Unique() 
+!this.list.dtext = !!arraylist !sum = !!arraylist.size()  $p 列表内目前共有： 
+$!sum  个元素
+
+ENDDO
+endmethod
+
+-- 清除列表中所选择的项
+define method .delce()
+!!arraylistaddce.clear()
+!!arraylistfilter.clear()
+!!arraylistfilterinit.clear()
+!selectindex = !this.List.Val
+
+do !s indices  !selectindex
+!!arraylist[$!selectindex[$!s]].delete()
+enddo
+
+!!arraylist.Compress()
+--!!arraylist.Unique()
+!this.list.dtext = !!arraylist
+
+!sum = !!arraylist.size()  
+ $p 列表内目前共有： $!sum  个元素
+ 
+endmethod
+
+
+-- 清除列表
+define method .removeall()
+!!arraylist.clear()
+!!arraylistaddce.clear()
+!!arraylistfilter.clear()
+!!arraylistfilterinit.clear()
+!this.list.dtext = !!arraylist
+endmethod
+
+------ 生成列表
+define method .go()
+  !arraylayer =array()
+  !arraytemp =array() 
+  
+    --判断是否是追加模式  
+    if (!this.appendmode.val eq TRUE) then
+    else
+      !!arraylist.clear()
+      !arraytemp.clear()
+      !arraylayer.clear()
+      --!!arraylistaddce.clear()
+      !!arraylistfilter.clear()
+      !!arraylistfilterinit.clear()
+      --!this.list.dtext = !!arraylist
+    endif
+    
+    --判断是否是from ce模式 
+    if(!this.ce.val) then
+       !for = 'for ce'
+    else
+       !for = ''
+    endif  
+
+    if(!this.type1.val eq 'ALL') then
+       var !items append coll all $!for
+    elseif (!this.type1.val eq 'all') then
+       var !items append coll all $!for
+    else
+       var !items append coll all $!this.type1.val $!for
+    endif
+    
+    if(!this.type2.val eq '') then
+       else
+       var !items append coll all $!this.type2.val $!for
+    endif
+       
+     --  if(!this.comp.val ne '') then
+     --  !comp = !this.comp.val
+     --     var !items append coll all $!comp $!for
+     --     else
+    --  !wild = !this.filter.val
+    --  !wild = !wild.trim()
+    
+    --判断是否输入元素名称关键字
+    !wild =  !this.filter.val  
+    if(!wild eq '') then
+       !wild = '*'
+    else
+       !wild = '*' + '$!wild' + '*'
+    endif 
+    !display = array()
+    !results = array()
+    var !!arraylistfilterinit eval name for all from !items 
+    HANDLE (2,542) 
+    !!Alert.Error( ' 未输入元件类型<TYPE>。' , 0.25, 0.1)
+    EndHandle
+
+    --以下过滤所输入的关键字，以便生成只含关键字的数组
+    do !m indices !!arraylistfilterinit
+    if(!!arraylistfilterinit[$!m].matchwild('$!wild')) then
+    !listdbref = !!arraylistfilterinit[$!m].dbref()
+    !listline = !listdbref .type + '    ' + !!arraylistfilterinit[$!m]
+    !!arraylistfilter.append(!listline)
+    else
+    endif
+    enddo
+    !!arraylist.appendarray(!!arraylistfilter)
+    !!arraylist.Unique()
+    
+    
+    if(!this.layer.val eq '') then
+      !this.list.dtext = !!arraylist
+      !sum = !!arraylist.size()  
+      $p 列表内目前共有： $!sum  个元素
+    else
+      !!arraylist = !this.list.dtext
+      do !l  values !!arraylist
+        $!l
+        var !arraytemp append coll all $!this.layer.val for ce
+        do !layer indices !arraytemp
+          !layerline = !this.layer.val + '    ' + !arraytemp[!layer]
+          !arraylayer.append(!layerline)
+        enddo
+      enddo
+      !!arraylist.clear()
+      !!arraylist.appendarray(!arraylayer)
+      !!arraylist.Unique()
+      !this.list.dtext = !!arraylist
+      !sum = !!arraylist.size()  
+      $p 列表内目前共有： $!sum  个元素  
+    endif   
+  
+endmethod     
+------ 生成列表结束
+
+--查看模型
+define method .lookce()
+  !name = !this.list.selection()
+  add $!name
+  auto $!name 
+ endmethod
+ 
+--toce
+define method .toce()
+  !name = !this.list.selection()
+--  add $!name
+--  auto $!name 
+$!name[1] 
+q att
+endmethod
+ 
+ 
+-- sort()
+define method .sort()
+!!arraylist.sort()
+!this.list.dtext = !!arraylist
+$p 排序完毕
+endmethod
+
+
+----加载右侧结果 
+--define method .loadfromright()
+--!left = array()
+--!right = array()
+--!right = !this.batch.val
+--!right.Unique()
+--  DO !A from 1 to arraysize(!right)                       
+--    !listline = 'LIST     ' + !right[$!A] 
+--    !left.append(!listline)          
+--  enddo  
+--!this.list.dtext = !left
+--!!arraylist.clear()
+--!!arraylist.appendarray(!left)
+--!right.clear()
+--!left.clear()
+--endmethod   
+
+--保存和加载列表
+define method .savelist()
+   !lists = !this.list.dtext
+   !output = object file('D:\AVEVA\TEMP\list.txt')
+   !output.writefile('overwrite',!lists)  
+endmethod  
+ 
+define method .loadlist()
+   !output = object file('D:\AVEVA\TEMP\list.txt')
+   !lists = !output.readfile()  
+   !this.list.dtext = !lists
+   !!arraylist.clear()
+   !!arraylist.AppendArray(!lists)
+endmethod  
+
+
+define method .edittolist()
+  !!arraylist.clear()
+  !listarray = array()
+  !editlist = !this.batch.val
+  do !l  values !editlist
+    $!l
+	!listlinetype = type
+	!listlinename = name
+	!listline = !listlinetype + '    ' + !listlinename
+	!listarray .append(!listline)
+  enddo
+  !!arraylist.AppendArray(!listarray)
+  !this.list.dtext = !!arraylist
+  !sum = !!arraylist.size()  
+  $p 列表内目前共有： $!sum  个元素  
+endmethod  
+
+
+
+define method .loadce()
+   syscom  'del /f /q  D:\AVEVA\TEMP\outputce.txt'
+   File  /D:\AVEVA\TEMP\outputce.txt
+   Output CE
+   File End
+   syscom 'D:\AVEVA\TEMP\outputce.txt &'
+---!loadcefile = object file('D:\AVEVA\TEMP\ce.txt')
+---!loadcemacro = !loadcefile.readfile()  
+---!This.batch.val = !loadcemacro
+endmethod  
+ 
+define method .togo()
+!name = !this.list.selection()
+$!name 
+--!to = !this.to.val
+--!tmp = $!to
+--$!tmp
+q att
+endmethod 
+ 
+--togoop()
+define method .togoop()
+!name = !this.list.selection()
+$!name[1] 
+!ref =  !This.togoop.Selection()
+if ( match(!ref ,'--') gt 0) then
+$p  该行无效:   $!ref
+else
+!tmp2 = $!ref
+$!tmp2
+q att
+endif
+$!name[1] 
+endmethod 
+
+
+--commands()
+define method .commands()
+!command =  !This.commands.Selection()
+if ( match(!command ,'--') gt 0) then
+$p  该行无效:   $!command
+else
+$!command
+endif
+
+endmethod 
+
+ 
+--加载选择的模版
+define method .select() 
+!temfilepatha = !This.item.Selection()
+!temfilepathb = '%PMLLIB%/HPDI/EXLIST/exlisttemplets/' + !temfilepatha
+!index = object FILE(!temfilepathb)                             
+  !file = ARRAY()                                        
+  !file = !index.readfile()                                                                        
+  DO !A from 1 to arraysize(!file)                       
+    !batchvalArray[$!A] = !file[$!A]                       
+  enddo 
+!This.batch.val = !batchvalArray
+endmethod
+
+define method .apply() 
+  !FinalLine = !this.batch.val
+  !TempMacro = object FILE('%PMLLIB%/HPDI/EXLIST/TempMacro')
+  !TempMacro.open('OVERWRITE')
+  do !i from 1 to arraysize(!FinalLine)
+    !TempMacro.writeRecord(!FinalLine[$!i])  
+  enddo     
+  !TempMacro.close()
+  $M %PMLLIB%/HPDI/EXLIST/TempMacro
+endmethod 
+
+--define method .openas() 
+--  !FinalLine3 = !this.batch.val
+--  !runmacro = object FILE('%PMLLIB%/HPDI/EXLIST/exlisttemplets/runmacro.txt')
+-- !runmacro.open('OVERWRITE')
+--  do !i from 1 to arraysize(!FinalLine3)
+--    !runmacro.writeRecord(!FinalLine3[$!i])  
+--  enddo     
+--  !runmacro.close()
+--  syscom   '%PMLLIB%\HPDI\EXLIST\exlisttemplets\runmacro.txt &'
+--endmethod 
+
+define method .editas() 
+  !FinalLine3 = !this.batch.val
+  !runmacro = object FILE('D:\AVEVA\TEMP\runmacro.txt')
+  !runmacro.open('OVERWRITE')
+  do !i from 1 to arraysize(!FinalLine3)
+    !runmacro.writeRecord(!FinalLine3[$!i])  
+  enddo     
+  !runmacro.close()
+  --syscom   '%PMLLIB%\HPDI\Notepad2.exe %PMLLIB%\HPDI\EXLIST\exlisttemplets\runmacro.txt &'
+  syscom   'D:\AVEVA\TEMP\runmacro.txt &'
+endmethod 
+
+
+define method .runmacro() 
+$m 'D:\AVEVA\TEMP\runmacro.txt'
+endmethod 
+
+--define method .outputce()
+--File  /D:\AVEVA\TEMP\outputce.txt
+--Output CE
+--File End
+--syscom 'D:\AVEVA\TEMP\outputce.txt'
+--endmethod 

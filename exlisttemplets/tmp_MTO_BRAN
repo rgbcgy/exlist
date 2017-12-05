@@ -1,0 +1,112 @@
+----生成bran列表，带补强焊接支管信息
+--------------
+!CENAME = NAME
+!allbran = array()
+!alltee = array()
+!teeinfo = array()
+!braninfo = array()
+!braninfoC = array()
+!braninfoC.append('SITE,ZONE,PIPE,BRAN,TEMP,ISPEC,TSPEC,INTH,HREF,TREF')
+
+do !N indices  !!arraylist
+  !listline = !!arraylist[!n].after('    ').trim()
+  !listdbref = !listline.dbref()
+  $!listdbref
+Var !tmpbran Collect all  Branch  For CE
+var !tmptee coll all tee for  ce
+!allbran.appendarray(!tmpbran)
+!alltee.appendarray(!tmptee)
+enddo
+
+-----------焊接支管信息---------------
+do !M values  !alltee
+$!M
+!p3bore = p3 bore
+!dtxr = dtxr
+!site = site
+!bran = bran
+!spref = spref
+next tubi
+
+Handle (2,113)
+EndHandle
+!tubispref = spref
+!tubilbore = Lbore
+!tubidtxr = dtxr
+
+
+if  (match(!dtxr,'焊接支管(带补强板)')  gt  0) then
+!line = !dtxr.string() + ',' + !spref.name.string() + ',' + !site.name.string() + ',' + !bran.name.string() + ',' + !p3bore.string() + ',' + !tubispref.name.string()  + ',' +  !tubilbore.string()  + ',' + !tubidtxr.string()
+!teeinfo.APPEND(!line)
+else
+endif
+enddo
+
+
+
+--------bran信息----------------
+do !b values !allbran
+$!b
+!name = name
+!temp = temp
+!pipe = pipe
+!zone = zone
+!site = site
+
+!INTHickness = INTHickness
+!ispectmp = ispec
+--if (!ispectmp.string()  eq  'Unset' ) then
+if  (match(!ispectmp.string(),'Un')  gt  0) then
+!ispec =  ''
+elseif (match(!ispectmp.string(),'Nu')  gt  0) then
+!ispec =  ''
+else
+!ispec = !ispectmp.name
+endif
+
+!tspectmp = tspec
+if  (match(!tspectmp.string(),'Un')  gt  0) then
+!tspec =  ''
+elseif (match(!tspectmp.string(),'Nu')  gt  0) then
+!tspec =  ''
+else
+!tspec = !tspectmp.name
+endif
+--q var !ispec
+
+!hreftmp = href
+!href = !hreftmp.string()
+!treftmp = tref
+!tref = !treftmp.string()
+
+--!treftmp = tref
+--if  (match(!treftmp.string(),'Un')  gt  0) then
+--!tref =  ''
+--elseif (match(!treftmp.string(),'Nu')  gt  0) then
+--!tref =  ''
+--else
+--!tref = !treftmp.string()
+--endif
+
+
+!lilne = !site.name + ',' + !zone.name + ',' + !pipe.name + ',' + !name  + ',' + !temp.string()  + ',' + !ispec  + ',' + !tspec  + ',' + !INTHickness.string() + ',' + !href  + ',' + !tref
+!braninfo.append(!lilne)
+!braninfoC.append(!lilne)
+enddo
+--enddo
+
+----写文件
+!output1 = object file('D:\AVEVA\mto\BRAN.TXT')
+!output1.writefile('overwrite',!braninfo)
+
+
+!output3 = object FILE('D:\AVEVA\mto\TEE-R.TXT')
+!output3.writefile('overwrite',!teeinfo)
+
+--!output1 = object file('C:\BRAN.CSV')
+--!output1.writefile('overwrite',!braninfoC)
+
+$!CENAME
+
+--SYSCOM  'C:\BRAN.CSV  &'
+--SYSCOM 'D:\AVEVA\mto\TEE-R.CSV &'
